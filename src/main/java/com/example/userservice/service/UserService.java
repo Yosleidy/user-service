@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        // aquí puedes añadir validaciones y lógica de negocio
+
         return repository.save(user);
     }
 }

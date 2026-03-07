@@ -1,14 +1,13 @@
 package com.example.userservice.dto;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductDto {
-
+public class OrderDto {
     private Long id;
-    private String name;
-    private double price;
-
-
+    private Long userId;
+    private Long productId;
+    private int quantity;
 }
