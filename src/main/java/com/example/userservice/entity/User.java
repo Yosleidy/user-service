@@ -3,12 +3,12 @@ package com.example.userservice.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue
@@ -16,4 +16,5 @@ public class User {
     private String name;
     @Column(unique = true)
     private String email;
+
 }
