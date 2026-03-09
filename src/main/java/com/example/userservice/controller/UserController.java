@@ -31,7 +31,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto dto) {
+        try {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
@@ -41,5 +42,26 @@ public class UserController {
         response.setName(saved.getName());
         response.setEmail(saved.getEmail());
         return ResponseEntity.ok(response);
+    }catch (RuntimeException e) {
+        return ResponseEntity
+                .badRequest()
+                .body("El usuario ya existe o el correo ya está en uso");
+}
+    }
+    // Buscar por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        User u = service.getUserById(id);
+        if (u == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new UserDto(u.getName(), u.getEmail()));
+    }
+
+    // Buscar por nombre (exacto o parcial)
+    @GetMapping("/search")
+    public ResponseEntity<List<UserDto>> getUsersByName(@RequestParam String name) {
+        List<UserDto> users = service.getUsersByName(name).stream()
+                .map(u -> new UserDto(u.getName(), u.getEmail()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
     }
 }
