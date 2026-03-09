@@ -3,8 +3,10 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.ProductDto;
 import com.example.userservice.entity.Product;
 import com.example.userservice.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todos los productos")
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> products = service.getAllProducts().stream().map(p -> {
             ProductDto dto = new ProductDto();
@@ -32,6 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener un producto por ID")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         Product p = service.getProductById(id);
         if (p == null) return ResponseEntity.notFound().build();
@@ -44,6 +48,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear un nuevo producto")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto dto) {
         Product p = new Product();
         p.setName(dto.getName());
@@ -55,5 +60,33 @@ public class ProductController {
         response.setName(saved.getName());
         response.setPrice(saved.getPrice());
         return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar un producto existente")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestBody(description = "Datos actualizados del producto") @org.springframework.web.bind.annotation.RequestBody ProductDto dto)           {
+
+        Product product = service.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+
+        Product updated = service.updateProduct(product);
+        return ResponseEntity.ok(updated);
+    }
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar un producto por ID")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        Product product = service.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        service.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }

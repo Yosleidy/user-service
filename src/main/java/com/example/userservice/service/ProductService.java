@@ -25,7 +25,15 @@ public class ProductService {
         return product.orElse(null);
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product)
+    {
         return repository.save(product);
+    }
+    public Product updateProduct(Product product) {
+        return repository.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+        repository.deleteById(id);
     }
 }

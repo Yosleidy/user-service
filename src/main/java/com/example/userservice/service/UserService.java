@@ -35,4 +35,12 @@ public class UserService {
     public List<User> getUsersByName(String name) {
         return repository.findByNameContainingIgnoreCase(name); // permite búsqueda parcial
     }
+    public User updateUser(User user) {
+        return repository.save(user); // Si el usuario tiene ID existente, JPA hace update
+    }
+
+    // Eliminar usuario por ID
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
+    }
 }

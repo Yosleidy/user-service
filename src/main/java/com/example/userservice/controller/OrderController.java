@@ -3,6 +3,7 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.OrderDto;
 import com.example.userservice.entity.Orders;
 import com.example.userservice.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas las órdenes")
     public ResponseEntity<List<OrderDto>> getOrders() {
         List<OrderDto> orders = service.getAllOrders().stream().map(o -> {
             OrderDto dto = new OrderDto();
@@ -35,6 +37,7 @@ public class OrderController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener una orden por ID")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
         Orders o = service.getOrderById(id);
         if (o == null) return ResponseEntity.notFound().build();
@@ -48,6 +51,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear una nueva orden")
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto dto) {
         Orders o = new Orders();
         o.setUserId(dto.getUserId());
